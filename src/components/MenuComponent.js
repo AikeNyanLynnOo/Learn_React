@@ -9,7 +9,7 @@ import {
 
 function RenderMenuItem({ dish, onClick }) {
   return (
-    <Card onClick={() => onClick(dish.id)}>
+    <Card>
       <CardImg top width="100%" src={dish.image} alt={dish.name} />
       <CardBody>
         <CardTitle tag="h5">{dish.name}</CardTitle>
@@ -30,7 +30,7 @@ const Menu = (props) => {
       </div>
     );
   });
-  return menu;
+  return <div className="row">{menu}</div>;
 };
 
 export default Menu;

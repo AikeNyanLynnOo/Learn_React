@@ -3,6 +3,7 @@ import Header from "./HeaderComponent";
 import Home from "./HomeComponent";
 import Menu from "./MenuComponent";
 import Contact from "./ContactComponent";
+import About from "./AboutComponent";
 import Footer from "./FooterComponent";
 import DishDetail from "./DishDetailComponent";
 import { DISHES } from "../shared/dishes";
@@ -16,7 +17,7 @@ class Main extends React.Component {
     super(props);
     this.state = {
       dishes: DISHES,
-      comments : COMMENTS,
+      comments: COMMENTS,
       promotions: PROMOTIONS,
       leaders: LEADERS,
       selectedDishId: null,
@@ -62,25 +63,16 @@ class Main extends React.Component {
               path="/menu"
               component={() => <Menu dishes={this.state.dishes} />}
             />
-            <Route exact path="/menu/:dishId" component={DishWithId} />
+            <Route path="/menu/:dishId" component={DishWithId} />
             <Route exact path="/contactus" component={Contact} />
+            <Route
+              exact
+              path="/aboutus"
+              component={() => <About leaders={this.state.leaders} />}
+            />
             <Redirect to="/home" />
           </Switch>
         </div>
-
-        {/* 
-            <Menu
-              dishes={this.state.dishes}
-              onClick={(dishId) => this.onSelectDish(dishId)}
-            />
-          <DishDetail
-            dish={
-              this.state.dishes.filter(
-                (dish) => dish.id === this.state.selectedDishId
-              )[0]
-            }
-          ></DishDetail>
-        */}
         <Footer />
       </div>
     );

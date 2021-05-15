@@ -1,6 +1,14 @@
+/* eslint-disable react/jsx-pascal-case */
 import React from "react";
 import { Label, Col, Button, Row } from "reactstrap";
 import { Control, LocalForm, Errors } from "react-redux-form";
+
+const required = (val) => val && val.length;
+const minLength = (len) => (val) => val && val.length >= len;
+const maxLength = (len) => (val) => val && val.length <= len;
+const isNumber = (val) => !isNaN(Number(val));
+const validEmail = (val) =>
+  /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
 class Contact extends React.Component {
   constructor(props) {
@@ -78,6 +86,21 @@ class Contact extends React.Component {
                     id="firstname"
                     name="firstname"
                     placeholder="First Name"
+                    validators={{
+                      required,
+                      minLength: minLength(2),
+                      maxLength: maxLength(15),
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".firstname"
+                    show="touched"
+                    messages={{
+                      required: "Required ",
+                      minLength: "Should be at least 2 letters",
+                      maxLength: "Should be at most 15 letters",
+                    }}
                   />
                 </Col>
               </Row>
@@ -92,6 +115,21 @@ class Contact extends React.Component {
                     id="lastname"
                     name="lastname"
                     placeholder="Last Name"
+                    validators={{
+                      required,
+                      minLength: minLength(2),
+                      maxLength: maxLength(15),
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".lastname"
+                    show="touched"
+                    messages={{
+                      required: "Required ",
+                      minLength: "Should be at least 2 letters",
+                      maxLength: "Should be at most 15 letters",
+                    }}
                   />
                 </Col>
               </Row>
@@ -106,6 +144,19 @@ class Contact extends React.Component {
                     id="email"
                     name="email"
                     placeholder="Email"
+                    validators={{
+                      required,
+                      validEmail,
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".email"
+                    show="touched"
+                    messages={{
+                      required: "Required ",
+                      validEmail: "Invalid Email",
+                    }}
                   />
                 </Col>
               </Row>
@@ -120,6 +171,19 @@ class Contact extends React.Component {
                     id="telnum"
                     name="telnum"
                     placeholder="Tel. Number"
+                    validators={{
+                      required,
+                      isNumber,
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".telnum"
+                    show="touched"
+                    messages={{
+                      required: "Required ",
+                      validEmail: "Phone number should include only numbers",
+                    }}
                   />
                 </Col>
               </Row>

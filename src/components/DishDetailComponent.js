@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-pascal-case */
+import React from "react";
 import {
   Card,
   CardImg,
@@ -7,8 +9,20 @@ import {
   List,
   Breadcrumb,
   BreadcrumbItem,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Label,
 } from "reactstrap";
+
+import { LocalForm, Control, Errors } from "react-redux-form";
+
 import { Link } from "react-router-dom";
+
+const required = (val) => val && val.length;
+const minLength = (len) => (val) => val && val.length >= 3;
+const maxLength = (len) => (val) => val && val.length <= 15;
 
 function RenderDish({ dish }) {
   return (
@@ -25,24 +39,119 @@ function RenderDish({ dish }) {
 }
 
 function RenderComments({ comments }) {
-  if (comments != null && comments.length > 0) {
-    return comments.map((cmt) => {
-      return (
-        <li key={cmt.id} className="mt-4">
-          <div>{cmt.comment}</div>
-          <code>
-            --{cmt.author},
-            {new Intl.DateTimeFormat("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "2-digit",
-            }).format(new Date(cmt.date))}
-          </code>
-        </li>
-      );
+  const Comments = comments.map((cmt) => {
+    return (
+      <li key={cmt.id} className="mt-4">
+        <div>{cmt.comment}</div>
+        <code>
+          --{cmt.author},
+          {new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+          }).format(new Date(cmt.date))}
+        </code>
+      </li>
+    );
+  });
+  return (
+    <React.Fragment>
+      {Comments}
+      <CommentForm />
+    </React.Fragment>
+  );
+}
+
+class CommentForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isModalOpen: false,
+    };
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  toggleModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
     });
-  } else {
-    return <li></li>;
+  }
+
+  handleSubmit(values) {
+    alert("Current state is " + JSON.stringify(values));
+  }
+
+  render() {
+    return (
+      <div className="mt-5">
+        <Button outline color="primary" onClick={this.toggleModal}>
+          <span className="fa fa-pencil fa-lg"></span>
+          Submit Comment
+        </Button>
+
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+          <ModalBody>
+            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+              <div className="form-group">
+                <Label htmlFor="rating">Rating</Label>
+                <Control.select
+                  className="form-select"
+                  model=".rating"
+                  id="rating"
+                  name="rating"
+                >
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </Control.select>
+              </div>
+
+              <div className="form-group mt-3">
+                <Label htmlFor="author">Your Name</Label>
+                <Control.text
+                  className="form-control"
+                  model=".author"
+                  id="author"
+                  name="author"
+                  validators={{
+                    required,
+                    minLength: minLength(3),
+                    maxLength: maxLength(15),
+                  }}
+                ></Control.text>
+                <Errors
+                  className="text-danger"
+                  model=".author"
+                  show="touched"
+                  messages={{
+                    required: "This field is required ! ",
+                    minLength: "Name should include at least 3 letters",
+                    maxLength: "Name must include at most 15 letters",
+                  }}
+                ></Errors>
+              </div>
+              <div className="form-group mt-3">
+                <Label htmlFor="comment">Comment</Label>
+                <Control.textarea
+                  className="form-control"
+                  model=".comment"
+                  rows="6"
+                  id="comment"
+                  name="comment"
+                ></Control.textarea>
+              </div>
+              <Button className="mt-3" color="primary" type="submit">
+                Submit
+              </Button>
+            </LocalForm>
+          </ModalBody>
+        </Modal>
+      </div>
+    );
   }
 }
 

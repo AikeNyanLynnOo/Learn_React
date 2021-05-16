@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 
 const required = (val) => val && val.length;
 const minLength = (len) => (val) => val && val.length >= 3;
-const maxLength = (len) => (val) => val && val.length <= 15;
+const maxLength = (len) => (val) => !val || val.length <= 15;
 
 function RenderDish({ dish }) {
   return (
@@ -38,7 +38,7 @@ function RenderDish({ dish }) {
   );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
   const Comments = comments.map((cmt) => {
     return (
       <li key={cmt.id} className="mt-4">
@@ -57,7 +57,7 @@ function RenderComments({ comments }) {
   return (
     <React.Fragment>
       {Comments}
-      <CommentForm />
+      <CommentForm addComment={addComment} dishId={dishId} />
     </React.Fragment>
   );
 }
@@ -79,7 +79,13 @@ class CommentForm extends React.Component {
   }
 
   handleSubmit(values) {
-    alert("Current state is " + JSON.stringify(values));
+    // alert("Current state is " + JSON.stringify(values));
+    this.props.addComment(
+      this.props.dishId,
+      values.rating,
+      values.author,
+      values.comment
+    );
   }
 
   render() {
@@ -175,7 +181,11 @@ const DishDetail = (props) => {
         <RenderDish dish={props.dish} />
         <List type="unstyled" className="col-md-5 col-xs-12 m-1">
           <h4>Comments</h4>
-          <RenderComments comments={props.comments} />
+          <RenderComments
+            comments={props.comments}
+            addComment={props.addComment}
+            dishId={props.dish.id}
+          />
         </List>
       </div>
     );

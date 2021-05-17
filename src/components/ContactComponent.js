@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-pascal-case */
 import React from "react";
 import { Label, Col, Button, Row } from "reactstrap";
-import { Control, LocalForm, Errors } from "react-redux-form";
+import { Control, Form, Errors, actions } from "react-redux-form";
 
 const required = (val) => val && val.length;
 const minLength = (len) => (val) => val && val.length >= len;
@@ -18,6 +18,7 @@ class Contact extends React.Component {
 
   handleSubmit(values) {
     alert("Current state is" + JSON.stringify(values));
+    this.props.resetFeedbackForm();
   }
 
   render() {
@@ -74,8 +75,11 @@ class Contact extends React.Component {
             <h3>Send Your Feedback</h3>
           </div>
           <div className="col-10 md-9">
-            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
-              <Row className="form-group">
+            <Form
+              model="feedback"
+              onSubmit={(values) => this.handleSubmit(values)}
+            >
+              <Row className="form-group mt-3 mb-3">
                 <Label md={2} htmlFor="firstname">
                   First Name
                 </Label>
@@ -104,7 +108,7 @@ class Contact extends React.Component {
                   />
                 </Col>
               </Row>
-              <Row className="form-group">
+              <Row className="form-group mt-3 mb-3">
                 <Label md={2} htmlFor="lastname">
                   Last Name
                 </Label>
@@ -133,7 +137,7 @@ class Contact extends React.Component {
                   />
                 </Col>
               </Row>
-              <Row className="form-group">
+              <Row className="form-group mt-3 mb-3">
                 <Label md={2} htmlFor="email">
                   Email
                 </Label>
@@ -160,7 +164,7 @@ class Contact extends React.Component {
                   />
                 </Col>
               </Row>
-              <Row className="form-group">
+              <Row className="form-group mt-3 mb-3">
                 <Label md={2} htmlFor="telnum">
                   Tel. Num
                 </Label>
@@ -187,7 +191,7 @@ class Contact extends React.Component {
                   />
                 </Col>
               </Row>
-              <Row className="form-group">
+              <Row className="form-group mt-3 mb-3">
                 <Col md={{ size: 6, offset: 2 }}>
                   <div className="form-check">
                     <Label check>
@@ -202,7 +206,7 @@ class Contact extends React.Component {
                 </Col>
                 <Col md={{ size: 3, offset: 1 }}>
                   <Control.select
-                    className="form-control"
+                    className="form-select"
                     model=".contactType"
                     name="contactType"
                   >
@@ -211,7 +215,7 @@ class Contact extends React.Component {
                   </Control.select>
                 </Col>
               </Row>
-              <Row className="form-group">
+              <Row className="form-group mt-3 mb-3">
                 <Label htmlFor="message" md={2}>
                   Your Feedback
                 </Label>
@@ -225,14 +229,14 @@ class Contact extends React.Component {
                   ></Control.textarea>
                 </Col>
               </Row>
-              <Row className="form-group">
+              <Row className="form-group mt-3 mb-3">
                 <Col md={{ size: 10, offset: 2 }}>
                   <Button type="submit" color="primary">
                     Send Feedback
                   </Button>
                 </Col>
               </Row>
-            </LocalForm>
+            </Form>
           </div>
         </div>
       </div>

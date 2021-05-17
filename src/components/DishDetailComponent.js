@@ -19,6 +19,7 @@ import {
 import { LocalForm, Control, Errors } from "react-redux-form";
 
 import { Link } from "react-router-dom";
+import { Loading } from "./LoadingComponent";
 
 const required = (val) => val && val.length;
 const minLength = (len) => (val) => val && val.length >= 3;
@@ -162,7 +163,23 @@ class CommentForm extends React.Component {
 }
 
 const DishDetail = (props) => {
-  if (props.dish != null) {
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  } else if (props.errMessage) {
+    return (
+      <div className="container">
+        <div className="row">
+          <p className="alert alert-danger">{props.errMessage}</p>
+        </div>
+      </div>
+    );
+  } else if (props.dish != null) {
     return (
       <div className="row">
         <Breadcrumb>

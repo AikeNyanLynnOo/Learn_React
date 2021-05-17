@@ -10,7 +10,7 @@ import DishDetail from "./DishDetailComponent";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { addComment } from "../redux/actions/ActionCreators";
+import { addComment, fetchDishes } from "../redux/actions/ActionCreators";
 
 const mapStateToProps = (state) => {
   return {
@@ -25,15 +25,22 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addComment: (dishId, rating, author, comment) =>
       dispatch(addComment(dishId, rating, author, comment)),
+    fetchDishes: () => dispatch(fetchDishes()),
   };
 };
 
 class Main extends React.Component {
+  componentDidMount() {
+    this.props.fetchDishes();
+  }
+
   render() {
     const HomeRoute = () => {
       return (
         <Home
-          dish={this.props.dishes.filter((dish) => dish.featured)[0]}
+          dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+          isLoading={this.props.dishes.isLoading}
+          errMessage={this.props.dishes.dishesErrMessage}
           promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
           leader={this.props.leaders.filter((leader) => leader.featured)[0]}
         />
@@ -43,10 +50,12 @@ class Main extends React.Component {
       return (
         <DishDetail
           dish={
-            this.props.dishes.filter(
+            this.props.dishes.dishes.filter(
               (dish) => dish.id === parseInt(match.params.dishId, 10)
             )[0]
           }
+          isLoading={this.props.dishes.isLoading}
+          errMessage={this.props.dishes.errMessage}
           comments={this.props.comments.filter(
             (cmt) => cmt.dishId === parseInt(match.params.dishId)
           )}
@@ -63,7 +72,13 @@ class Main extends React.Component {
             <Route
               exact
               path="/menu"
-              component={() => <Menu dishes={this.props.dishes} />}
+              component={() => (
+                <Menu
+                  dishes={this.props.dishes.dishes}
+                  isLoading={this.props.dishes.isLoading}
+                  errMessage={this.props.dishes.errMessage}
+                />
+              )}
             />
             <Route path="/menu/:dishId" component={DishWithId} />
             <Route exact path="/contactus" component={Contact} />

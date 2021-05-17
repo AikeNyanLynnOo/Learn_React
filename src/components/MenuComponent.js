@@ -10,6 +10,8 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
+import { Loading } from "./LoadingComponent";
+
 function RenderMenuItem({ dish }) {
   return (
     <Link to={`/menu/${dish.id}`}>
@@ -35,20 +37,38 @@ const Menu = (props) => {
       </div>
     );
   });
-  return (
-    <div className="row">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <Link to="/home">Home</Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem active>Menu</BreadcrumbItem>
-      </Breadcrumb>
-      <div className="col-12">
-        <h3>Menu</h3>
+
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
       </div>
-      {menu}
-    </div>
-  );
+    );
+  } else if (props.errMessage) {
+    return (
+      <div className="container">
+        <div className="row">
+          <p className="alert alert-danger">{props.errMessage}</p>
+        </div>
+      </div>
+    );
+  } else
+    return (
+      <div className="row">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/home">Home</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>Menu</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="col-12">
+          <h3>Menu</h3>
+        </div>
+        {menu}
+      </div>
+    );
 };
 
 export default Menu;

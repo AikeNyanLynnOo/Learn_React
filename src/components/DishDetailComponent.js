@@ -21,6 +21,8 @@ import { LocalForm, Control, Errors } from "react-redux-form";
 import { Link } from "react-router-dom";
 import { Loading } from "./LoadingComponent";
 
+import { baseUrl } from "../shared/baseUrl";
+
 const required = (val) => val && val.length;
 const minLength = (len) => (val) => val && val.length >= 3;
 const maxLength = (len) => (val) => !val || val.length <= 15;
@@ -29,7 +31,7 @@ function RenderDish({ dish }) {
   return (
     <div className="col-12 col-md-5 col-xs-12 m-1">
       <Card>
-        <CardImg top width="100%" src={dish.image} alt={dish.name} />
+        <CardImg top width="100%" src={baseUrl + dish.image} alt={dish.name} />
         <CardBody>
           <CardTitle tag="h5">{dish.name}</CardTitle>
           <CardText>{dish.description}</CardText>
@@ -39,28 +41,31 @@ function RenderDish({ dish }) {
   );
 }
 
-function RenderComments({ comments, addComment, dishId }) {
-  const Comments = comments.map((cmt) => {
+function RenderComments({ comments, addComment, dishId, errMessage }) {
+  if (!errMessage) {
+    const Comments = comments.map((cmt) => {
+      return (
+        <li key={cmt.id} className="mt-4">
+          <div>{cmt.comment}</div>
+          <code>
+            --{cmt.author},
+            {new Intl.DateTimeFormat("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+            }).format(new Date(cmt.date))}
+          </code>
+        </li>
+      );
+    });
     return (
-      <li key={cmt.id} className="mt-4">
-        <div>{cmt.comment}</div>
-        <code>
-          --{cmt.author},
-          {new Intl.DateTimeFormat("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "2-digit",
-          }).format(new Date(cmt.date))}
-        </code>
-      </li>
+      <React.Fragment>
+        {Comments}
+        <CommentForm addComment={addComment} dishId={dishId} />
+      </React.Fragment>
     );
-  });
-  return (
-    <React.Fragment>
-      {Comments}
-      <CommentForm addComment={addComment} dishId={dishId} />
-    </React.Fragment>
-  );
+  }
+  return <p className="alert alert-danger">{errMessage}</p>;
 }
 
 class CommentForm extends React.Component {
@@ -200,6 +205,7 @@ const DishDetail = (props) => {
           <h4>Comments</h4>
           <RenderComments
             comments={props.comments}
+            errMessage={props.commentErrMessage}
             addComment={props.addComment}
             dishId={props.dish.id}
           />

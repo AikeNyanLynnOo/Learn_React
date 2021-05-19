@@ -41,7 +41,7 @@ function RenderDish({ dish }) {
   );
 }
 
-function RenderComments({ comments, addComment, dishId, errMessage }) {
+function RenderComments({ comments, postComment, dishId, errMessage }) {
   if (!errMessage) {
     const Comments = comments.map((cmt) => {
       return (
@@ -61,7 +61,7 @@ function RenderComments({ comments, addComment, dishId, errMessage }) {
     return (
       <React.Fragment>
         {Comments}
-        <CommentForm addComment={addComment} dishId={dishId} />
+        <CommentForm postComment={postComment} dishId={dishId} />
       </React.Fragment>
     );
   }
@@ -86,7 +86,7 @@ class CommentForm extends React.Component {
 
   handleSubmit(values) {
     // alert("Current state is " + JSON.stringify(values));
-    this.props.addComment(
+    this.props.postComment(
       this.props.dishId,
       values.rating,
       values.author,
@@ -206,7 +206,7 @@ const DishDetail = (props) => {
           <RenderComments
             comments={props.comments}
             errMessage={props.commentErrMessage}
-            addComment={props.addComment}
+            postComment={props.postComment}
             dishId={props.dish.id}
           />
         </List>

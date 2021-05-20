@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-pascal-case */
 import React from "react";
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
+
 import {
   Card,
   CardImg,
@@ -30,13 +32,25 @@ const maxLength = (len) => (val) => !val || val.length <= 15;
 function RenderDish({ dish }) {
   return (
     <div className="col-12 col-md-5 col-xs-12 m-1">
-      <Card>
-        <CardImg top width="100%" src={baseUrl + dish.image} alt={dish.name} />
-        <CardBody>
-          <CardTitle tag="h5">{dish.name}</CardTitle>
-          <CardText>{dish.description}</CardText>
-        </CardBody>
-      </Card>
+      <FadeTransform
+        in
+        transformProps={{
+          exitTransform: "scale(0.5) translateY(-50%)",
+        }}
+      >
+        <Card>
+          <CardImg
+            top
+            width="100%"
+            src={baseUrl + dish.image}
+            alt={dish.name}
+          />
+          <CardBody>
+            <CardTitle tag="h5">{dish.name}</CardTitle>
+            <CardText>{dish.description}</CardText>
+          </CardBody>
+        </Card>
+      </FadeTransform>
     </div>
   );
 }
@@ -45,22 +59,24 @@ function RenderComments({ comments, postComment, dishId, errMessage }) {
   if (!errMessage) {
     const Comments = comments.map((cmt) => {
       return (
-        <li key={cmt.id} className="mt-4">
-          <div>{cmt.comment}</div>
-          <code>
-            --{cmt.author},
-            {new Intl.DateTimeFormat("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "2-digit",
-            }).format(new Date(cmt.date))}
-          </code>
-        </li>
+        <Fade in>
+          <li key={cmt.id} className="mt-4">
+            <div>{cmt.comment}</div>
+            <code>
+              --{cmt.author},
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+              }).format(new Date(cmt.date))}
+            </code>
+          </li>
+        </Fade>
       );
     });
     return (
       <React.Fragment>
-        {Comments}
+        <Stagger in>{Comments}</Stagger>
         <CommentForm postComment={postComment} dishId={dishId} />
       </React.Fragment>
     );

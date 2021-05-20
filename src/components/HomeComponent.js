@@ -1,3 +1,4 @@
+import { FadeTransform } from "react-animation-components";
 import {
   Card,
   CardImg,
@@ -23,16 +24,23 @@ function RenderCard({ item, isLoading, errMessage }) {
     return <p className="alert alert-danger">{errMessage}</p>;
   } else {
     return (
-      <Card>
-        <CardImg src={baseUrl + item.image} alt={item.name} />
-        <CardBody>
-          <CardTitle>{item.name}</CardTitle>
-          {item.designation ? (
-            <CardSubtitle>{item.designation}</CardSubtitle>
-          ) : null}
-          <CardText>{item.description}</CardText>
-        </CardBody>
-      </Card>
+      <FadeTransform
+        in
+        transformProps={{
+          exitTransform: "scale(0.5) translateY(-50%)",
+        }}
+      >
+        <Card>
+          <CardImg src={baseUrl + item.image} alt={item.name} />
+          <CardBody>
+            <CardTitle>{item.name}</CardTitle>
+            {item.designation ? (
+              <CardSubtitle>{item.designation}</CardSubtitle>
+            ) : null}
+            <CardText>{item.description}</CardText>
+          </CardBody>
+        </Card>
+      </FadeTransform>
     );
   }
 }

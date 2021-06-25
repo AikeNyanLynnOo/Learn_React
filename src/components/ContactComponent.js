@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-pascal-case */
 import React from "react";
 import { Label, Col, Button, Row } from "reactstrap";
-import { Control, Form, Errors, actions } from "react-redux-form";
+import { Control, Form, Errors } from "react-redux-form";
 
 const required = (val) => val && val.length;
 const minLength = (len) => (val) => val && val.length >= len;
@@ -18,6 +18,15 @@ class Contact extends React.Component {
 
   handleSubmit(values) {
     alert("Current state is" + JSON.stringify(values));
+    this.props.postFeedback(
+      values.firstname,
+      values.lastname,
+      values.email,
+      values.telnum,
+      values.agree,
+      values.contactType,
+      values.message
+    );
     this.props.resetFeedbackForm();
   }
 
@@ -231,8 +240,16 @@ class Contact extends React.Component {
               </Row>
               <Row className="form-group mt-3 mb-3">
                 <Col md={{ size: 10, offset: 2 }}>
-                  <Button type="submit" color="primary">
+                  <Button className="m-1" type="submit" color="primary">
                     Send Feedback
+                  </Button>
+                  <Button
+                    outline
+                    color="primary"
+                    className="m-1"
+                    onClick={this.props.resetFeedbackForm}
+                  >
+                    Cancel
                   </Button>
                 </Col>
               </Row>

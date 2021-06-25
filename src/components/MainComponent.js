@@ -15,6 +15,8 @@ import {
   fetchDishes,
   fetchComments,
   fetchPromos,
+  fetchLeaders,
+  postFeedback,
 } from "../redux/actions/ActionCreators";
 
 import { actions } from "react-redux-form";
@@ -36,6 +38,27 @@ const mapDispatchToProps = (dispatch) => {
     fetchDishes: () => dispatch(fetchDishes()),
     fetchComments: () => dispatch(fetchComments()),
     fetchPromos: () => dispatch(fetchPromos()),
+    fetchLeaders: () => dispatch(fetchLeaders()),
+    postFeedback: (
+      firstname,
+      lastname,
+      email,
+      telnum,
+      agree,
+      contactType,
+      message
+    ) =>
+      dispatch(
+        postFeedback(
+          firstname,
+          lastname,
+          email,
+          telnum,
+          agree,
+          contactType,
+          message
+        )
+      ),
     resetFeedbackForm: () => dispatch(actions.reset("feedback")),
   };
 };
@@ -45,6 +68,7 @@ class Main extends React.Component {
     this.props.fetchDishes();
     this.props.fetchComments();
     this.props.fetchPromos();
+    this.props.fetchLeaders();
   }
 
   render() {
@@ -61,7 +85,11 @@ class Main extends React.Component {
           }
           isPromosLoading={this.props.promotions.isLoading}
           promosErrMessage={this.props.promotions.errMessage}
-          leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+          leader={
+            this.props.leaders.leaders.filter((leader) => leader.featured)[0]
+          }
+          isLeadersLoading={this.props.leaders.isLoading}
+          leadersErrMessage={this.props.leaders.errMessage}
         />
       );
     };
@@ -111,13 +139,22 @@ class Main extends React.Component {
                   exact
                   path="/contactus"
                   component={() => (
-                    <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+                    <Contact
+                      resetFeedbackForm={this.props.resetFeedbackForm}
+                      postFeedback={this.props.postFeedback}
+                    />
                   )}
                 />
                 <Route
                   exact
                   path="/aboutus"
-                  component={() => <About leaders={this.props.leaders} />}
+                  component={() => (
+                    <About
+                      leaders={this.props.leaders.leaders}
+                      isLoading={this.props.leaders.isLoading}
+                      errMessage={this.props.leaders.errMessage}
+                    />
+                  )}
                 />
                 <Redirect to="/home" />
               </Switch>

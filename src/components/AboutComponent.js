@@ -8,27 +8,49 @@ import {
   Media,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../shared/baseUrl";
 
-function RenderLeader({ leader }) {
-  return (
-    <Media key={leader.id} className="mb-3">
-      <Media left href="#">
-        <Media object src={leader.image} alt={leader.image} />
-      </Media>
-      <Media body>
-        <Media heading>{leader.name}</Media>
-        <p heading>{leader.designation}</p>
-        {leader.description}
-      </Media>
-    </Media>
-  );
+import { Fade, Stagger } from "react-animation-components";
+
+function RenderLeaders({ leaders, isLoading, errMessage }) {
+  if (isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />;
+        </div>
+      </div>
+    );
+  } else if (errMessage) {
+    return (
+      <div className="container">
+        <div className="row">
+          <p className="alert alert-danger">{errMessage}</p>;
+        </div>
+      </div>
+    );
+  } else {
+  }
+  return leaders.map((leader) => {
+    return (
+      <Fade in>
+        <Media key={leader.id} className="mb-3">
+          <Media left href="#">
+            <Media object src={baseUrl + leader.image} alt={leader.image} />
+          </Media>
+          <Media body>
+            <Media heading>{leader.name}</Media>
+            <p heading>{leader.designation}</p>
+            {leader.description}
+          </Media>
+        </Media>
+      </Fade>
+    );
+  });
 }
 
 function About(props) {
-  const leaders = props.leaders.map((leader) => {
-    return <RenderLeader leader={leader} />;
-  });
-
   return (
     <div className="container">
       <div className="row">
@@ -105,7 +127,13 @@ function About(props) {
           <h2>Corporate Leadership</h2>
         </div>
         <div className="col-12">
-          <Media list>{leaders}</Media>
+          <Stagger in>
+            <RenderLeaders
+              leaders={props.leaders}
+              isLoading={props.isLoading}
+              errMessage={props.errMessage}
+            />
+          </Stagger>
         </div>
       </div>
     </div>

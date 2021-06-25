@@ -196,3 +196,108 @@ export const promosFailed = (errMessage) => {
     payload: errMessage,
   };
 };
+
+// Leaders
+
+export const fetchLeaders = () => (dispatch) => {
+  dispatch(leadersLoading());
+
+  return fetch(baseUrl + "leaders")
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          var err = new Error("Error " + response.status + response.statusText);
+          err.response = response;
+          throw err;
+        }
+      },
+      (error) => {
+        var err = new Error(error.message);
+        throw err;
+      }
+    )
+    .then((response) => response.json())
+    .then((leaders) => {
+      dispatch(addLeaders(leaders));
+    })
+    .catch((err) => {
+      dispatch(leadersFailed(err.message));
+    });
+};
+
+export const leadersLoading = () => {
+  return {
+    type: ActionTypes.LEADERS_LOADING,
+  };
+};
+
+export const addLeaders = (leaders) => {
+  return {
+    type: ActionTypes.ADD_LEADERS,
+    payload: leaders,
+  };
+};
+
+export const leadersFailed = (errMessage) => {
+  return {
+    type: ActionTypes.LEADERS_FAILED,
+    payload: errMessage,
+  };
+};
+
+// Feedback
+
+export const postFeedback = (
+  firstname,
+  lastname,
+  email,
+  telnum,
+  agree,
+  contactType,
+  message
+) => (dispatch) => {
+  var feedback = {
+    firstname: firstname,
+    lastname: lastname,
+    email: email,
+    telnum: telnum,
+    agree: agree,
+    contactType: contactType,
+    message: message,
+    date: new Date().toISOString(),
+  };
+  console.log("ur feedback is " + feedback);
+
+  return fetch(baseUrl + "feedback", {
+    method: "POST",
+    body: JSON.stringify(feedback),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin",
+  })
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          var err = new Error("Error " + response.status + response.statusText);
+          err.response = response;
+          throw err;
+        }
+      },
+      (error) => {
+        var err = new Error(error.message);
+        throw err;
+      }
+    )
+    .then((response) => response.json())
+    .then((feedback) => {
+      alert("Your feedback is received" + JSON.stringify(feedback));
+    })
+    .catch((err) => {
+      alert("You may not be able to give feedback right now ! " + err.message);
+    });
+};

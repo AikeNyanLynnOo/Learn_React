@@ -37,7 +37,7 @@ function RenderLeaders({ leaders, isLoading, errMessage }) {
       <Fade in>
         <Media key={leader.id} className="mb-3">
           <Media left href="#">
-            <Media object src={baseUrl + leader.image} alt={leader.image} />
+            <Media object src={leader.image} alt={leader.image} />
           </Media>
           <Media body>
             <Media heading>{leader.name}</Media>

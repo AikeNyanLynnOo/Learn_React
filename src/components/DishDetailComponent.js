@@ -42,7 +42,7 @@ function RenderDish({ dish }) {
           <CardImg
             top
             width="100%"
-            src={baseUrl + dish.image}
+            src={dish.image}
             alt={dish.name}
           />
           <CardBody>

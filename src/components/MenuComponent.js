@@ -17,7 +17,7 @@ function RenderMenuItem({ dish }) {
   return (
     <Link to={`/menu/${dish.id}`}>
       <Card>
-        <CardImg top width="100%" src={baseUrl + dish.image} alt={dish.name} />
+        <CardImg top width="100%" src={dish.image} alt={dish.name} />
         <CardBody>
           <CardTitle tag="h5">{dish.name}</CardTitle>
           <CardSubtitle tag="h6" className="mb-2 text-muted">
